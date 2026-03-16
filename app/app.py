@@ -30,5 +30,10 @@ def login():
     else:
         return "Invalid credentials"
 
+@app.route("/search")
+def search():
+    query = request.args.get("q")
+    return f"Results for: {query}"
+
 if __name__ == "__main__":
     app.run(debug=True)

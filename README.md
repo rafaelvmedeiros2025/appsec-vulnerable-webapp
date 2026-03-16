@@ -38,7 +38,7 @@ The `--` comments out the rest of the SQL query, allowing login without knowing 
 
 # Result
 
-![SQL Injection Login Bypass](resources/logged.png)
+![SQL Injection Login Bypass](resources/sql_injection.png)
 
 The attacker successfully bypasses authentication.
 
@@ -63,3 +63,49 @@ Parameterized queries ensure that user input is treated as data instead of execu
 
 This project is intentionally vulnerable and created for educational purposes only.
 Do not deploy this application in production.
+
+---
+
+# Vulnerability: Cross-Site Scripting (XSS)
+
+Cross-Site Scripting (XSS) occurs when an application renders user input in the browser without proper sanitization.
+
+In this endpoint the application directly returns user input to the page.
+
+```python
+return f"Results for: {query}"
+```
+
+Because the input is not escaped, an attacker can inject JavaScript that will execute in the victim's browser.
+
+---
+
+# Exploit
+
+```
+http://localhost:5000/search?q=<script>alert("xss")</script>
+```
+
+---
+
+# Result
+
+![XSS Example](resources/xss.png)
+
+The injected JavaScript executes in the browser.
+
+---
+
+# Solution
+
+User input must be escaped before being rendered in HTML.
+
+Example:
+
+```python
+from markupsafe import escape
+
+return f"Results for: {escape(query)}"
+```
+
+Escaping ensures that user input is treated as text instead of executable code.
